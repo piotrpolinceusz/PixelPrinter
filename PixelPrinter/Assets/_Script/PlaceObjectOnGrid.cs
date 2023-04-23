@@ -1,30 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class PlaceObjectOnGrid : MonoBehaviour
 {
     public Transform gridCellPrefab;
     public Transform cube;
     public Transform OnMousePrefabe;
+    List<GameObject> cubeList = new List<GameObject>();
+    //public Transform GameObject;
 
     [SerializeField]private int height;
     [SerializeField] int width;
+    //private int level;
 
     public Vector3 smootMousePosition;
     private Vector3 mousePosition;
     private Node[,] nodesbase;
-    private Node[,] nodesup;
     private Plane plane;
     private Plane plane1;
-    public List<GameObject> nodenames = new List<GameObject>();
-    private int L1 = 0;
-    public MeshRenderer PLS;
+    public static List<Vector3> BoxListPosition = new List<Vector3>();
+    public List<Vector3> BoxPoints{ get; set; }
+    //public List<GameObject> boxes = new List<GameObject>();
+    //private int L1 = 0;
+    
 
     void Start()
     {
         CreateGrid();
         plane = new Plane(inNormal:Vector3.up,inPoint:transform.position);
+        BoxListPosition.Clear();
     }
 
     // Update is called once per frame
@@ -33,11 +38,12 @@ public class PlaceObjectOnGrid : MonoBehaviour
         GetMousePositionOnGrid();
         
         ClickAndDestroy();
-        Debug.Log("lista cell");
-        foreach(var cells in nodenames)
-        {
-        print(cells.name);
-        }
+        
+        // Debug.Log("lista cell");
+        // foreach(var cells in nodenames)
+        // {
+        // print(cells.name);
+        // }
 
     }
 
@@ -53,15 +59,25 @@ public class PlaceObjectOnGrid : MonoBehaviour
                 BoxCollider bc = hit.collider as BoxCollider;
                 if (bc != null)
                 {
+                    Vector3 destroyedPosition = bc.transform.position;
                     smootMousePosition = mousePosition;
                     mousePosition.y = 0;
                     mousePosition = Vector3Int.RoundToInt(mousePosition);
                     Destroy(bc.gameObject);
+
+                    
                     foreach (var node in nodesbase)
                     {
-                        if (node.cellPosition == mousePosition && node.isPlaceble==false)
-                        {
+                        if (node.cellPosition == mousePosition && node.isPlaceble==false && node.zPosition!=0)
+                        { 
+                            var level = node.zPosition;
+                            node.zPosition= level-1;
+                            BoxListPosition.Remove(new Vector3(mousePosition.x, destroyedPosition.y, mousePosition.z));
+                        }
+                        if (node.cellPosition == mousePosition && node.isPlaceble==false && node.zPosition==0)
+                        { 
                             node.isPlaceble = true;
+                            BoxListPosition.Remove(new Vector3(mousePosition.x, destroyedPosition.y, mousePosition.z));
                         }
                         
                     }
@@ -78,81 +94,97 @@ public class PlaceObjectOnGrid : MonoBehaviour
         
         
         if (plane.Raycast(ray, out var enter))
-        {
+        {   
+            
             mousePosition = ray.GetPoint(enter);
+            
             //print(mousePosition);
             smootMousePosition = mousePosition;
             mousePosition.y = 0;
             mousePosition = Vector3Int.RoundToInt(mousePosition);
-            
             foreach (var node in nodesbase)
             {
-                if (node.cellPosition == mousePosition && node.isPlaceble)
+            
+                if (node.cellPosition == mousePosition && node.isPlaceble )
                 {
+                    
                     if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
-                    {
+                    {   
+                        
                         node.isPlaceble = false;
+                        
                         OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
                         OnMousePrefabe.position = node.cellPosition + new Vector3(x:0,y:0.5f,z:0);
+                        BoxListPosition.Add(OnMousePrefabe.position);
+                        //print(BoxListPosition);
                         OnMousePrefabe = null;
-                        //Vector3 StuckNodePosition = node.cellPosition + new Vector3(x:0,y:1f,z:0);
-                            //Transform obj = Instantiate(gridCellPrefab,StuckNodePosition, Quaternion.identity);
-                            //var L1 = 0;
-                            //print(lastname);
-                            //var name=lastname+1;
-                            //print(name);
-                            //obj.name = "Cell H1_" + L1;
-                            int ix = (int)node.cellPosition.x;
-                            int iz = (int)node.cellPosition.z;
-                            CreateGrid1(ix,iz,1);
-                            //nodesup[1,1]= new Node(isPlaceble:true, StuckNodePosition, obj,havebase:true,1);
-                            //obj.Transform.enabled=false;
-                            //Node.enabled=false;
-                            //L1=L1+1;
-                            //nodenames.Add(name);
+                        node.zPosition=1;
+                        PrintPoints();
+                        //cubeList.Add(OnMousePrefabe.gameObject);  
+                        
+                       
                         
                     }
+                  
                 }
             }
         }
-        // if (plane1.Raycast(ray, out var enter1))
-        // {
-        //     mousePosition = ray.GetPoint(enter1);
-        //     print(mousePosition);
-        //     smootMousePosition = mousePosition;
-        //     mousePosition.y = 1;
-        //     mousePosition = Vector3Int.RoundToInt(mousePosition);
+        if (plane.Raycast(ray, out var enter1))
+         {
             
-        //     foreach (var node in nodesup)
-        //     {
-        //         if (node.cellPosition == mousePosition && node.isPlaceble)
-        //         {
-        //             if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
-        //             {
-        //                 node.isPlaceble = false;
-        //                 OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
-        //                 OnMousePrefabe.position = node.cellPosition + new Vector3(x:0,y:1.5f,z:0);
-        //                 OnMousePrefabe = null;
-        //                 Vector3 StuckNodePosition = node.cellPosition + new Vector3(x:0,y:1f,z:0);
+             mousePosition = ray.GetPoint(enter1);
+             //print(mousePosition);
+             smootMousePosition = mousePosition;
+             mousePosition.y = 0;
+             mousePosition = Vector3Int.RoundToInt(mousePosition);
+            foreach (var node in nodesbase)
+             {
+             
+                if (node.cellPosition == mousePosition && node.isPlaceble==false && node.zPosition!=0)
+                {
+                    if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
+                    {
+                        var level = node.zPosition;
+                        var level1=0.5f+level;
+                        print(level1);
+                        OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
+                        OnMousePrefabe.position = node.cellPosition + new Vector3(x:0,y:level1,z:0);
+                        BoxListPosition.Add(OnMousePrefabe.position);
+                        //print(BoxListPosition);
+                        OnMousePrefabe = null;
+                        node.zPosition++;
+                        PrintPoints();
                         
-
-        //                     Transform obj = Instantiate(gridCellPrefab,StuckNodePosition, Quaternion.identity);
-        //                     //var L1 = 0;
-        //                     //print(lastname);
-        //                     //var name=lastname+1;
-        //                     //print(name);
-        //                     obj.name = "Cell H2" + L1;
-        //                     nodesup[1,1]= new Node(isPlaceble:true, StuckNodePosition, obj,havebase:true,2);
-        //                     L1=L1+1;
-        //                     //nodenames.Add(name);
                         
-        //             }
-        //         }
-        //     }
-        // }
+                    }
+                }
+             }
+        }
     }
 
-    
+    // public void PrintObject()
+    //     {
+    //         foreach (var SpecificBox in BoxListPosition)
+    //         {
+    //             //Debug.Log(SpecificBox.Name);
+    //             Debug.Log(SpecificBox.x);
+    //             Debug.Log(SpecificBox.y);
+    //             Debug.Log(SpecificBox.z);
+    //         }
+                
+            
+    //     }
+
+
+    public void PrintPoints()
+        {
+            foreach (Vector3 v in BoxListPosition)
+            {
+        Debug.Log(v);
+            }
+        }
+
+
     public void OnMouseClickOnUI()
         {
             if(OnMousePrefabe == null)
@@ -166,57 +198,38 @@ public class PlaceObjectOnGrid : MonoBehaviour
     {
         nodesbase= new Node[width, height];
         var CellBaseNumber = 0;
-        //nodenames.Add(name);
+        
+        
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
                 Vector3 worldPosition = new Vector3(x:i,y:0,z:j);
                 Transform obj = Instantiate(gridCellPrefab, worldPosition, Quaternion.identity);
-                obj.name = "Cell " + name;
+                
+                obj.name = "Cell " + CellBaseNumber;
                 nodesbase[i,j]= new Node(isPlaceble:true, worldPosition, obj,havebase:false,0);
                 CellBaseNumber++;
-                //nodenames.Add(name);
+                
                 
                 
             }
         }
     }
-    private void CreateGrid1(int x1, int z1,int level)
-    {
-        nodesup= new Node[1,1];
-        var CellBaseNumber = 0;
-        //nodenames.Add(name);
-        Vector3 worldPosition = new Vector3(x:x1,y:level,z:z1);
-        Transform obj = Instantiate(gridCellPrefab, worldPosition, Quaternion.identity);
-        obj.name = "Cell " + name;
-        nodesup[1,1]= new Node(isPlaceble:true, worldPosition, obj,havebase:false,0);
-        CellBaseNumber++;
-        //nodenames.Add(name);
-                
-                
-    }
-            
-    
+    // public void GetCubePosition()
+    // {
+    //     GameObject myGameObject = GameObject.Find(Cube);
 
-    public void addCell(GameObject AllCells)
-     {
-         
-         Debug.Log("outside");
-         foreach (GameObject Cell in nodenames)
-         {
-             Debug.Log("checking");
-             if (AllCells.name == Cell.name)
-             {
-                 Debug.Log("Already in database");
-             }
-             else
-             {
-                 nodenames.Add(Cell);
-             }
- 
-         }
-     }
+    //     // Pobierz listę komponentów
+    //     Component[] components = myGameObject.GetComponents<Component>();
+
+    //     // Wyświetl nazwy komponentów w konsoli
+    //     foreach (Component component in components)
+    //     {
+    //         Debug.Log(component.GetType().Name);
+    
+    //     }
+    // }
 }
 
 
