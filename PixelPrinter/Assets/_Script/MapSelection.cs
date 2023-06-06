@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapSelection : MonoBehaviour
 {
-    public static UIManager instance;
+    
     public bool MapIsUnlock = false;
     public GameObject LockGo;
     public GameObject UnLockGo;

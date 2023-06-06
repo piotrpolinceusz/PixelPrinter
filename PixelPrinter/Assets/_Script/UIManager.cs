@@ -13,8 +13,10 @@ public class UIManager : MonoBehaviour
     public GameObject[] LevelSelectionPanels;
 
     [Header("Licznik Gwiazdek")]
-    public int Stars;
-    public TextMeshProUGUI startText;
+    public int Stars =0;
+    public TextMeshProUGUI mainStarsText;
+    public TextMeshProUGUI[] mapStarsText;
+    
     public MapSelection[] mapSelections;
     public TextMeshProUGUI[] questStarTexts;
     public TextMeshProUGUI[] lockedStarTexts;
@@ -43,6 +45,10 @@ public class UIManager : MonoBehaviour
 
  void Start()
     {
+        //PlayerPrefs.DeleteAll(); //reset wszystkiego
+        
+        Stars=PlayerPrefs.GetInt("Stars");
+        Debug.Log("=======gwiazdki total: "+Stars+"=========");
         GameActive=false;
         TimeRemaininig = MaxTime;
         EndTiming = Sec3;
@@ -63,12 +69,14 @@ public class UIManager : MonoBehaviour
             }
             
         }
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
     {
         UpdateStarUI();
+        Updatemap1Stars();
+        
         UpdateLockedStarUI();
         UpdateUnLockedStarUI(); 
         PlayGame ();
@@ -87,17 +95,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void UpdateUnLockedStarUI ()  // update stars in unlokde view
+    private void UpdateUnLockedStarUI ()  // update stars in unlocke view
     {
         for(int i = 0; i < mapSelections.Length; i++) 
         {
-            unlockStarTexts[i].text = Stars.ToString() + "/" + mapSelections[i].EndLevel * 3;
+            unlockStarTexts[i].text = Stars.ToString() + "/" + mapSelections[i].EndLevel*3;
         }
     }
 
     private void UpdateStarUI()  // update main count stars
     {
-        startText.text = Stars.ToString();
+        mainStarsText.text = Stars.ToString();
     }
 
     public void PressMapButton (int _mapIndex )  //go to map
@@ -150,4 +158,22 @@ public class UIManager : MonoBehaviour
             Debug.Log("koniec gry");
        }
     }
+    private void Updatemap1Stars ()
+    {
+        for(int i = 0; i < mapSelections.Length; i++)
+        {
+            int sum=0;
+            for(int k = mapSelections[i].StartLevel ; k < 9 ; k++) 
+                {
+                    sum +=PlayerPrefs.GetInt("Lvl"+ k.ToString());  
+                }
+            mapStarsText[i].text=sum.ToString();
+        }
+        
+    }
+
+    
+    
 }
+    
+
