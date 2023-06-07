@@ -4,14 +4,18 @@ using UnityEngine;
 using System.Linq;
 public class PlaceObjectOnGrid : MonoBehaviour
 {
+   
     public Transform gridCellPrefab;
     public Transform cube;
     public Transform OnMousePrefabe;
     List<GameObject> cubeList = new List<GameObject>();
+    
     //public Transform GameObject;
 
-    [SerializeField]private int height;
-    [SerializeField] int width;
+    public int cosheight;
+    public int coswidth;
+    private int gridheight=7;
+    private int gridwidth=7;
     //private int level;
 
     public Vector3 smootMousePosition;
@@ -21,12 +25,18 @@ public class PlaceObjectOnGrid : MonoBehaviour
     private Plane plane1;
     public static List<Vector3> BoxListPosition = new List<Vector3>();
     public List<Vector3> BoxPoints{ get; set; }
+    public int LevelSelectionLevelIndex;
+    public int levelIndex;
     //public List<GameObject> boxes = new List<GameObject>();
     //private int L1 = 0;
     
 
     void Start()
     {
+     
+        LevelSelectionLevelIndex = PlayerPrefs.GetInt("ActualLevel",levelIndex); 
+        Debug.Log("Mam level: "+LevelSelectionLevelIndex);
+        PlateSize(LevelSelectionLevelIndex);
         CreateGrid();
         plane = new Plane(inNormal:Vector3.up,inPoint:transform.position);
         BoxListPosition.Clear();
@@ -196,13 +206,15 @@ public class PlaceObjectOnGrid : MonoBehaviour
 
     private void CreateGrid()
     {
-        nodesbase= new Node[width, height];
+        
+        
+        nodesbase= new Node[gridwidth, gridheight];
         var CellBaseNumber = 0;
         
         
-        for (int i = 0; i < width; i++)
+        for (int i = 0; i <gridwidth; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < gridheight; j++)
             {
                 Vector3 worldPosition = new Vector3(x:i,y:0,z:j);
                 Transform obj = Instantiate(gridCellPrefab, worldPosition, Quaternion.identity);
@@ -230,6 +242,30 @@ public class PlaceObjectOnGrid : MonoBehaviour
     
     //     }
     // }
+
+    public void PlateSize(int Level)
+    {
+        if(Level==1)
+        {
+            gridwidth=3;
+            gridheight=3;
+            Debug.Log(gridwidth+", "+gridheight);
+        
+        } 
+        if(Level==2)
+        {
+            gridwidth=4;
+            gridheight=4;
+            Debug.Log(gridwidth+", "+gridheight);
+        } 
+        else
+        {
+            gridwidth=5;
+            gridheight=5;
+            Debug.Log("Ta trzecia opcja 5x5");
+        }
+    }
+
 }
 
 
@@ -252,3 +288,9 @@ public class Node
         this.zPosition = zPosition;
     }
 }
+    
+
+
+
+
+

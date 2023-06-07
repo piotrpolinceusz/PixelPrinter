@@ -4,14 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using TMPro;
+using System.IO;
+using Microsoft.Win32;
+using System.Globalization;
 
 public class Timer : MonoBehaviour
 {
     
     public static Timer instance;
+    LevelManager levelstemplate;
     public GameObject GameOverText;
     public GameObject YouWinMenu;
-    public GameObject RewardText;
+    public GameObject GameElements;
+    public TextMeshProUGUI RewardText;
+    public TextMeshProUGUI BestScoreText;
     public Image TimerForeground;
     float TimeRemaininig;
     float EndTiming;
@@ -30,17 +37,25 @@ public class Timer : MonoBehaviour
     private int currentStarNumber=0;
     public int levelIndex;
     public int LevelSelectionLevelIndex;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         LevelSelectionLevelIndex = PlayerPrefs.GetInt("ActualLevel",levelIndex); 
+
         //YouWinMenu.SetActive(false);
         TimeRemaininig = MaxTime;
         RewardStar =0;
         EndTiming = Sec3;
         WinLevel = false;
-        LevelTemplate();
+         
+        Debug.Log("funkcja template: ");
+        //levelstemplate = GameObject.FindGameObjectWithTag("time").GetComponent<LevelManager>();
+        //levelstemplate.getLevelTemplates(LevelSelectionLevelIndex);
+        // LevelTemplate();
+        // Deg.Log("lista template: ");
+        // Debug.Log(LevelTemplatePosition);
         Debug.Log("=======level: "+ LevelSelectionLevelIndex +" =============");
         Debug.Log("=======obecnie level gwiazdek: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber)+"=========");
         Debug.Log("Level: "+LevelSelectionLevelIndex);
@@ -112,14 +127,22 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+        
         LevelSelectionLevelIndex = PlayerPrefs.GetInt("ActualLevel",levelIndex); 
-      
+
+        
+        //levelManager.getLevelTemplate(1);
+        getLevelTemplates(LevelSelectionLevelIndex);
+    
         PlaceObjectOnGrid = FindObjectOfType<PlaceObjectOnGrid>();
         BoxListPositionToCheck=PlaceObjectOnGrid.BoxListPosition;  
-        
+        //LevelTemplate();
         CheckWin();
+        CountAndManu();
 
+    }    
+    private void CountAndManu()
+    {    
         if(TimeRemaininig>0 && WinLevel == false)
             {
                     //YouWinMenu.SetActive(false);
@@ -137,6 +160,7 @@ public class Timer : MonoBehaviour
                 
                     Debug.Log("TimeRemaininig:"+TimeRemaininig);
                     YouWinMenu.SetActive(true);
+                    GameElements.SetActive(false);
                     EndTiming -= Time.deltaTime;
 
                     if (TimeRemaininig>(MaxTime*0.6))
@@ -145,6 +169,7 @@ public class Timer : MonoBehaviour
 
                         int LvlSTarSave=PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber);
                         currentStarNumber=3;
+
                         if(LvlSTarSave==0)
                         {
                             Debug.Log("currentStarNumber:"+currentStarNumber);
@@ -154,6 +179,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 } 
                             RewardStar=3;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 3 3");
                             Debug.Log("gwiazdki"+RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -168,6 +195,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=2;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 3 2");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -182,6 +211,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=1;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 3 1");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -193,6 +224,8 @@ public class Timer : MonoBehaviour
                             Debug.Log(PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber));
                             
                             RewardStar=0;
+                            RewardText.text="You have all stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 3 0");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -215,6 +248,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 } 
                             RewardStar=2;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 2 2");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -229,6 +264,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=1;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 2 1");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -243,6 +280,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=0;
+                            RewardText.text="1 stars left";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 2 0");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -263,6 +302,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=1;
+                            RewardText.text="Reward "+RewardStar.ToString()+" stars";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 1 1");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -277,6 +318,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=0;
+                            RewardText.text="2 stars left";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 1 0");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -293,6 +336,8 @@ public class Timer : MonoBehaviour
                                     PlayerPrefs.SetInt("Lvl"+LevelSelectionLevelIndex,currentStarNumber); 
                                 }
                             RewardStar=0;
+                            RewardText.text="3 stars left";
+                            BestScoreText.text="Best Score: "+PlayerPrefs.GetInt("Lvl"+LevelSelectionLevelIndex).ToString()+" stars";
                             Debug.Log("otrzymane 0 0");
                             Debug.Log(RewardStar);
                             PlayerPrefs.SetInt("Reward",RewardStar); 
@@ -370,14 +415,19 @@ public class Timer : MonoBehaviour
         LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
         LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
         LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:1));
-    }
-    private void LevelTemplate1()
-    {
         
-        LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
-        LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
-        LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+        foreach (Vector3 position in LevelTemplatePosition)
+        {
+        Debug.Log(position.ToString());
+        }
     }
+    // private void LevelTemplate1()
+    // {
+        
+    //     LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+    //     LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+    //     LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+    // }
 
     public void CheckWin()
     {
@@ -426,6 +476,157 @@ public class Timer : MonoBehaviour
         PlayerPrefs.SetInt("Stars",StarsCount);
     }
 
+
+   
+
+ public void getLevelTemplates (int level) 
+  {
+    LevelTemplatePosition.Clear();
+
+    if(level==1)
+        {
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:1));
+        }
+    else if(level==2)
+        {
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+        }
+    else if(level==3)
+        {
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+        }
+
+    else
+        {
+            // Jeśli level nie jest ani 1, ani 2, wyczyść listę LevelTemplatePosition
+            LevelTemplatePosition.Clear();
+            Debug.Log("Pusta lista template");  
+        }  
+
+  }
+
+
+// private void LevelTemplate1(int levelNumber)
+//     {
+//         string filePath = Application.dataPath+"/_Script/Level.txt";
+//         Debug.Log(filePath);
+//         if (File.Exists(filePath))
+//         {
+//             StreamReader reader = new StreamReader(filePath);
+//             string line;
+//             // Przeszukiwanie pliku linia po linii
+//         while ((line = reader.ReadLine()) != null)
+//         {
+//             // Sprawdzenie, czy linia zawiera informacje o danym poziomie
+//             if (line.StartsWith("Level: " + levelNumber.ToString()))
+//             {
+//                 Debug.Log("Linia:" + line);
+//                 // Przesunięcie na kolejną linię
+//                 line = reader.ReadLine();
+//                 Debug.Log("Linia:" + line);
+//                 // Odczytywanie współrzędnych, dopóki nie napotkamy linii rozpoczynającej się od "Level: "
+//                 while (line != null && !line.StartsWith("Level: "))
+//                 {
+//                         string[] coordinates = line.Split(',');
+
+//                         if (coordinates.Length == 3)
+//                         {
+//                             float x, y, z;
+
+//                             if (float.TryParse(coordinates[0], out x) && float.TryParse(coordinates[1], out y) && float.TryParse(coordinates[2], out z))
+//                             {
+//                                 LevelTemplatePosition.Add(new Vector3(x, y, z));
+//                             }
+//                             else
+//                             {
+//                                 Debug.LogError("to 1 Invalid line format in file " + filePath);
+//                             }
+                            
+//                             // Wyświetlenie wyniku podziału linii
+//                             Debug.Log("Coordinates: " + string.Join(", ", coordinates));
+//                         }
+//                         else
+//                         {
+//                             Debug.LogError(" to 2 Invalid line format in file " + filePath);
+//                             break;
+//                         }
+                        
+//                         // Przesunięcie na kolejną linię
+//                         line = reader.ReadLine();
+//                 }
+
+//                 // Zakończenie pętli, gdy odczytane zostały wszystkie współrzędne dla danego poziomu
+//                 break;
+//             }
+
+
+                
+//             else
+//             {
+//                 Debug.LogError("File not found: " + filePath);
+//             }
+            
+
+            
+//         }
+//     }
+//     }
+
+//     public void CheckWin1()
+//     {
+//         LevelTemplate(); // Wywołanie funkcji LevelTemplate
+
+//         bool allMatch = true;
+
+//         if (LevelTemplatePosition.Count != BoxListPositionToCheck.Count)
+//         {
+//             return;
+//         }
+
+//         foreach (Vector3 item in LevelTemplatePosition)
+//         {
+//             bool matchFound = false;
+//             foreach (Vector3 obj in BoxListPositionToCheck)
+//             {
+//                 if (item.x == obj.x && item.y == obj.y && item.z == obj.z)
+//                 {
+//                     matchFound = true;
+//                     break;
+//                 }
+//             }
+//             if (!matchFound)
+//             {
+//                 allMatch = false;
+//                 break;
+//             }
+//         }
+
+//         if (allMatch)
+//         {
+//             WinLevel = true;
+//             Debug.Log("Match");
+//         }
+//         else
+//         {
+//             Debug.Log("NOT Match");
+//         }
+//     }
+
+// private void PrintList(List<Vector3> list)
+// {
+//     foreach (Vector3 position in list)
+//     {
+//         Debug.Log(position.ToString());
+//     }
+// }
+    
 
 
 

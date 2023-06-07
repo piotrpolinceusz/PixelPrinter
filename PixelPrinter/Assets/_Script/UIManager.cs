@@ -75,7 +75,7 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         UpdateStarUI();
-        Updatemap1Stars();
+        UpdatemapStarsMap();
         
         UpdateLockedStarUI();
         UpdateUnLockedStarUI(); 
@@ -97,11 +97,20 @@ public class UIManager : MonoBehaviour
 
     private void UpdateUnLockedStarUI ()  // update stars in unlocke view
     {
-        for(int i = 0; i < mapSelections.Length; i++) 
+    for (int i = 0; i < mapSelections.Length; i++)
+    {
+        int stars = 0;
+
+        for (int level = mapSelections[i].StartLevel; level <= mapSelections[i].EndLevel; level++)
         {
-            unlockStarTexts[i].text = Stars.ToString() + "/" + mapSelections[i].EndLevel*3;
+            int levelStars = PlayerPrefs.GetInt("Lvl" + level.ToString());
+            stars += levelStars;
         }
+
+        int maxStars = (mapSelections[i].EndLevel - mapSelections[i].StartLevel + 1) * 3;
+        unlockStarTexts[i].text = stars.ToString() + "/" + maxStars.ToString();
     }
+}
 
     private void UpdateStarUI()  // update main count stars
     {
@@ -171,6 +180,24 @@ public class UIManager : MonoBehaviour
         }
         
     }
+
+    private void UpdatemapStarsMap()
+{
+    for (int i = 0; i < mapSelections.Length; i++)
+    {
+        int stars = 0;
+
+        for (int level = mapSelections[i].StartLevel; level <= mapSelections[i].EndLevel; level++)
+        {
+            int levelStars = PlayerPrefs.GetInt("Lvl" + level.ToString());
+            stars += levelStars;
+        }
+        mapStarsText[i].text = stars.ToString();
+    
+        Debug.Log("Map " + i + " - Stars: " + stars);
+    }
+}
+
 
     
     
