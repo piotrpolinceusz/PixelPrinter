@@ -12,10 +12,10 @@ public class PlaceObjectOnGrid : MonoBehaviour
     
     //public Transform GameObject;
 
-    public int cosheight;
-    public int coswidth;
-    private int gridheight=7;
-    private int gridwidth=7;
+    public int height;
+    public int width;
+    
+    
     //private int level;
 
     public Vector3 smootMousePosition;
@@ -29,6 +29,7 @@ public class PlaceObjectOnGrid : MonoBehaviour
     public int levelIndex;
     //public List<GameObject> boxes = new List<GameObject>();
     //private int L1 = 0;
+    public int maxLevel = 5;
     
 
     void Start()
@@ -37,6 +38,7 @@ public class PlaceObjectOnGrid : MonoBehaviour
         LevelSelectionLevelIndex = PlayerPrefs.GetInt("ActualLevel",levelIndex); 
         Debug.Log("Mam level: "+LevelSelectionLevelIndex);
         PlateSize(LevelSelectionLevelIndex);
+        Debug.Log("x: "+height+", y: "+width);
         CreateGrid();
         plane = new Plane(inNormal:Vector3.up,inPoint:transform.position);
         BoxListPosition.Clear();
@@ -114,25 +116,57 @@ public class PlaceObjectOnGrid : MonoBehaviour
             mousePosition = Vector3Int.RoundToInt(mousePosition);
             foreach (var node in nodesbase)
             {
-            
-                if (node.cellPosition == mousePosition && node.isPlaceble )
+                if (node.cellPosition == mousePosition && node.isPlaceble)
                 {
+                    if (Input.GetMouseButtonUp(0) && OnMousePrefabe != null)
+                    {
+                        //node.isPlaceble = false;
+                        //COS NIE DZIALA Z USTAWIANIEM ===================================================
+                        // Testuj kolizję z innym boxem
+                        // RaycastHit hit;
+                        // if (Physics.Raycast(ray, out hit))
+                        // {
+                        //     var otherBox = hit.collider.GetComponent<ObjectFollowMouse>();
+                        //     if (otherBox != null && otherBox.isOnGrid && otherBox.zPosition >= node.zPosition)
+                        //     {
+                        //         node.zPosition = otherBox.zPosition + 1;
+                        //     }
+                        // }
+
+                        // OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
+                        // OnMousePrefabe.position = node.cellPosition + new Vector3(x: 0, y: 0.5f, z: 0);
+                        // BoxListPosition.Add(OnMousePrefabe.position);
+                        // OnMousePrefabe = null;
+                        // PrintPoints();
+                        //==================================================================================
+            
+            // //=======================================dzualajacy z kolorem ale wolno=====
+            // foreach (var node in nodesbase)
+            // {
+            
+            //     if (node.cellPosition == mousePosition && node.isPlaceble )
+            //     {
                     
-                    if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
-                    {   
+            //         if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
+            //         {   
                         
+            //             //================dzialajaca =================
                         node.isPlaceble = false;
-                        
+                        Debug.Log("node.isPlaceble 1 po: "+node.isPlaceble);
                         OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
                         OnMousePrefabe.position = node.cellPosition + new Vector3(x:0,y:0.5f,z:0);
+                        Debug.Log("OnMousePrefabe.position: "+OnMousePrefabe.position);
                         BoxListPosition.Add(OnMousePrefabe.position);
-                        //print(BoxListPosition);
+                        Debug.Log("Box: "+BoxListPosition);
+                        Debug.Log("OnMousePrefabe: "+OnMousePrefabe);
                         OnMousePrefabe = null;
+                        Debug.Log("OnMousePrefabe: "+OnMousePrefabe);
                         node.zPosition=1;
+                        Debug.Log("node.zPosition 1 po: "+node.zPosition);
                         PrintPoints();
                         //cubeList.Add(OnMousePrefabe.gameObject);  
-                        
-                       
+            //             //===============================================
+            //            //=============================================================
                         
                     }
                   
@@ -140,31 +174,42 @@ public class PlaceObjectOnGrid : MonoBehaviour
             }
         }
         if (plane.Raycast(ray, out var enter1))
-         {
+        {
             
              mousePosition = ray.GetPoint(enter1);
              //print(mousePosition);
              smootMousePosition = mousePosition;
-             mousePosition.y = 0;
+             //Debug.Log("smootMousePosition: "+smootMousePosition);
+             //tutaj nowosc
+            foreach (var node in nodesbase)
+             {  
+                
+             mousePosition.y = node.zPosition;
+             Debug.Log("mousePosition.y: "+mousePosition.y);
+             }
+             //mousePosition.y = 0;//dzalajace
              mousePosition = Vector3Int.RoundToInt(mousePosition);
             foreach (var node in nodesbase)
              {
-             
-                if (node.cellPosition == mousePosition && node.isPlaceble==false && node.zPosition!=0)
+                if (node.cellPosition == mousePosition && node.isPlaceble == false && node.zPosition != 0)
                 {
-                    if(Input.GetMouseButtonUp(0) && OnMousePrefabe !=null)
+                    if (Input.GetMouseButtonUp(0) && OnMousePrefabe != null)
                     {
+                        Debug.Log("lOnMousePrefabe2: "+OnMousePrefabe);
                         var level = node.zPosition;
-                        var level1=0.5f+level;
-                        print(level1);
+                        var level1 = 0.5f + level;
+                        Debug.Log("level2: "+level1);
                         OnMousePrefabe.GetComponent<ObjectFollowMouse>().isOnGrid = true;
-                        OnMousePrefabe.position = node.cellPosition + new Vector3(x:0,y:level1,z:0);
+                        OnMousePrefabe.position = node.cellPosition + new Vector3(x: 0, y: level1, z: 0);
+                        Debug.Log("OnMousePrefabe.position: "+OnMousePrefabe.position);
                         BoxListPosition.Add(OnMousePrefabe.position);
-                        //print(BoxListPosition);
+                        Debug.Log("Box: "+BoxListPosition);
                         OnMousePrefabe = null;
+                        Debug.Log("node.zPosition2 przed: "+node.zPosition);
                         node.zPosition++;
+                        Debug.Log("node.zPosition2 po: "+node.zPosition);
                         PrintPoints();
-                        
+                 
                         
                     }
                 }
@@ -208,13 +253,13 @@ public class PlaceObjectOnGrid : MonoBehaviour
     {
         
         
-        nodesbase= new Node[gridwidth, gridheight];
+        nodesbase= new Node[width, height];
         var CellBaseNumber = 0;
         
         
-        for (int i = 0; i <gridwidth; i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < gridheight; j++)
+            for (int j = 0; j < height; j++)
             {
                 Vector3 worldPosition = new Vector3(x:i,y:0,z:j);
                 Transform obj = Instantiate(gridCellPrefab, worldPosition, Quaternion.identity);
@@ -245,23 +290,23 @@ public class PlaceObjectOnGrid : MonoBehaviour
 
     public void PlateSize(int Level)
     {
-        if(Level==1)
+        if(Level>=1 & Level<7)
         {
-            gridwidth=3;
-            gridheight=3;
-            Debug.Log(gridwidth+", "+gridheight);
+            width=3;
+            height=3;
+            Debug.Log(width+", "+height);
         
         } 
-        if(Level==2)
+        else if(Level>=7 & Level<13)
         {
-            gridwidth=4;
-            gridheight=4;
-            Debug.Log(gridwidth+", "+gridheight);
+            width=4;
+            height=4;
+            Debug.Log(width+", "+height);
         } 
         else
         {
-            gridwidth=5;
-            gridheight=5;
+            width=5;
+            height=5;
             Debug.Log("Ta trzecia opcja 5x5");
         }
     }

@@ -22,7 +22,7 @@ public class Timer : MonoBehaviour
     public Image TimerForeground;
     float TimeRemaininig;
     float EndTiming;
-    public float MaxTime = 10f;
+    public float MaxTime;
     public float Sec3 = 3f;
     private PlaceObjectOnGrid PlaceObjectOnGrid;
     public List<GameObject> boxlist;
@@ -43,7 +43,8 @@ public class Timer : MonoBehaviour
     void Start()
     {
         LevelSelectionLevelIndex = PlayerPrefs.GetInt("ActualLevel",levelIndex); 
-
+        getLevelTemplates(LevelSelectionLevelIndex);
+        Debug.Log("Czas na level: "+ MaxTime);
         //YouWinMenu.SetActive(false);
         TimeRemaininig = MaxTime;
         RewardStar =0;
@@ -132,7 +133,7 @@ public class Timer : MonoBehaviour
 
         
         //levelManager.getLevelTemplate(1);
-        getLevelTemplates(LevelSelectionLevelIndex);
+        
     
         PlaceObjectOnGrid = FindObjectOfType<PlaceObjectOnGrid>();
         BoxListPositionToCheck=PlaceObjectOnGrid.BoxListPosition;  
@@ -483,28 +484,241 @@ public class Timer : MonoBehaviour
   {
     LevelTemplatePosition.Clear();
 
-    if(level==1)
+    if(level==1)//line
         {
+            MaxTime=10f;
+
             LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
             LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
             LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            
+        }
+    else if(level==2)//romb
+        {
+            MaxTime=10f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+        }
+    else if(level==3)//x
+        {
+            MaxTime=12f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:2));
+        }
+    else if(level==4)//rectang
+        {
+            MaxTime=16f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+        }
+    else if(level==5)//slope
+        {
+            MaxTime=38f;
+
+            
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:2));
             LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:1,y:2.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:2,y:3.5f,z:2));
         }
-    else if(level==2)
+    else if(level==6)//castle
         {
-            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            MaxTime=40f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
             LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:1));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:2));
+            
+
+
+        }    
+
+    else if(level==7)
+        {
+             MaxTime=56f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:3));
             LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:2.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:2));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:3.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:3.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:3.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:3.5f,z:2));
         }
-    else if(level==3)
+
+        else if(level==9)
         {
+             MaxTime=94f;
+
+            
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:2.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:2.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:3.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:3.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:3.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:3.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:3.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:3.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:3.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:1,y:4.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:4.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:4.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:4.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:4.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:2,y:5.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:5.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:5.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:3,y:6.5f,z:3));
+
+        } 
+
+    else if(level==8)
+        {
+             MaxTime=72f;
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:0.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:0));
             LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:0.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:0));
             LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:0.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:0));
             LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:0.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:0,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:1,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:1.5f,z:3));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:2));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:1.5f,z:3));
+
+            LevelTemplatePosition.Add(new Vector3(x:1,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:0));
+            LevelTemplatePosition.Add(new Vector3(x:2,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:1));
+            LevelTemplatePosition.Add(new Vector3(x:3,y:2.5f,z:2));
+            
+            LevelTemplatePosition.Add(new Vector3(x:3,y:3.5f,z:0));
+
         }
 
     else
         {
+            MaxTime=100f;
             // Jeśli level nie jest ani 1, ani 2, wyczyść listę LevelTemplatePosition
             LevelTemplatePosition.Clear();
             Debug.Log("Pusta lista template");  

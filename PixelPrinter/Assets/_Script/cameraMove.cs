@@ -38,31 +38,31 @@ public class cameraMove : MonoBehaviour
     public void CameraPositionBySize () 
     {
         
-        if(placeObjectOnGrid.coswidth==9)
+        if(placeObjectOnGrid.width==9)
         {
             CameraPosition(4f,6f,10); 
         } 
-        if(placeObjectOnGrid.coswidth==8)
+        if(placeObjectOnGrid.width==8)
         {
             CameraPosition(3.5f,5f,9); 
         } 
-        if(placeObjectOnGrid.coswidth==7)
+        if(placeObjectOnGrid.width==7)
         {
             CameraPosition(3f,4f,8); 
         } 
-        if(placeObjectOnGrid.coswidth==6)
+        if(placeObjectOnGrid.width==6)
         {
             CameraPosition(2.5f,4f,7); 
         } 
-        if(placeObjectOnGrid.coswidth==5)
+        if(placeObjectOnGrid.width==5)
         {
             CameraPosition(2f,3f,6); 
         } 
-        if(placeObjectOnGrid.coswidth==4)
+        if(placeObjectOnGrid.width==4)
         {
             CameraPosition(1.5f,2.5f,5); 
         }
-        if(placeObjectOnGrid.coswidth==3)
+        if(placeObjectOnGrid.width==3)
         {
             CameraPosition(1f,1.5f,4); 
         }  
@@ -71,31 +71,31 @@ public class cameraMove : MonoBehaviour
     }
     public void PlatePosition()
     {
-        if(placeObjectOnGrid.coswidth==9)
+        if(placeObjectOnGrid.width==9)
         {
             Plate.transform.position=new Vector3(4.5f,-0.1f,4.5f); 
         } 
-        if(placeObjectOnGrid.coswidth==8)
+        if(placeObjectOnGrid.width==8)
         {
             Plate.transform.position=new Vector3(4f,-0.1f,4f); 
         } 
-        if(placeObjectOnGrid.coswidth==7)
+        if(placeObjectOnGrid.width==7)
         {
            Plate.transform.position=new Vector3(3f,-0.1f,3f); 
         } 
-        if(placeObjectOnGrid.coswidth==6)
+        if(placeObjectOnGrid.width==6)
         {
             Plate.transform.position=new Vector3(2.5f,-0.1f,225f); 
         } 
-        if(placeObjectOnGrid.coswidth==5)
+        if(placeObjectOnGrid.width==5)
         {
            Plate.transform.position=new Vector3(2f,-0.1f,2f); 
         } 
-        if(placeObjectOnGrid.coswidth==4)
+        if(placeObjectOnGrid.width==4)
         {
             Plate.transform.position=new Vector3(1.5f,-0.1f,1.5f); 
         }
-        if(placeObjectOnGrid.coswidth==3)
+        if(placeObjectOnGrid.width==3)
         {
             Plate.transform.position=new Vector3(1f,-0.1f,1f); 
         }  
